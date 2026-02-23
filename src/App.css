@@ -1,0 +1,38 @@
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0
+}
+
+.container {
+  background-color: transparent;
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+/* .grid div {
+  background-color: red;
+}
+
+.grid div:nth-child(2n) {
+  background-color: green;
+} */
+
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7rem;
+  /* Optional: style your grid items */
+}
