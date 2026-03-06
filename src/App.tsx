@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { register } from '@tauri-apps/plugin-global-shortcut';
 import { currentMonitor, getCurrentWindow, LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
 import "./App.css";
+import { KeyGrid } from "./KeyGrid";
 
 interface ShortcutType {
   shortcut: string;
@@ -13,7 +14,8 @@ const keyShortCut = ['Y', 'U', 'I', 'O', 'P', 'H', 'J', 'K', 'L', 'Semicolon', '
 const availableShortcuts = keyShortCut.map(k => 'Command+Shift+' + k);
 const modifier = "shift+super+";
 
-let holdingShortcut = false
+let holdingShortcut = false;
+let firstKey: string | null = null;
 
 function App() {
   useEffect(() => {
@@ -29,7 +31,7 @@ function App() {
     }
 
     initWindow();
-    
+
     register(['Command+Shift+A', ...availableShortcuts], async (shortCut: ShortcutType) => {
       if (shortCut.shortcut === modifier + 'KeyA') {
         if (shortCut.state === 'Pressed') {
@@ -38,31 +40,56 @@ function App() {
           await getCurrentWindow().show();
         } else {
           holdingShortcut = false;
+          firstKey = null;
 
           await getCurrentWindow().hide();
         }
-      } else if (holdingShortcut && shortCut.state === 'Released') {
-        const letter = shortCut.shortcut.replace(modifier, '').replace('Key', '');
+      } else if (holdingShortcut && !firstKey && shortCut.state === 'Pressed') {
+        firstKey = shortCut.shortcut;
+      } else if (holdingShortcut && firstKey && shortCut.state === 'Pressed') {
+        const firstLetter = firstKey.replace(modifier, '').replace('Key', '');
+        const secondLetter = shortCut.shortcut.replace(modifier, '').replace('Key', '');
         const monitor = await currentMonitor();
-        
+
         if (monitor) {
           const size = monitor.size;
-
-          const index = keyShortCut.indexOf(letter);
-
           const columns = 5;
           const rows = 4;
 
-          const column = index % columns;
-          const row = Math.floor(index / columns);
+          const firstIndex = keyShortCut.indexOf(firstLetter);
+          const secondIndex = keyShortCut.indexOf(secondLetter);
 
-          const cellWidth = size.width / columns;
-          const cellHeight = size.height / rows;
+          if (firstIndex !== -1 && secondIndex !== -1) {
 
-          const centerX = (column + 0.5) * cellWidth;
-          const centerY = (row + 0.5) * cellHeight;
+            const screenCellWidth = size.width / columns;
+            const screenCellHeight = size.height / rows;
 
-          await getCurrentWindow().setCursorPosition(new LogicalPosition(centerX, centerY))
+            // FIRST GRID
+            const firstColumn = firstIndex % columns;
+            const firstRow = Math.floor(firstIndex / columns);
+
+            const firstCellX = firstColumn * screenCellWidth;
+            const firstCellY = firstRow * screenCellHeight;
+
+            // SECOND GRID (inside first cell)
+            const subCellWidth = screenCellWidth / columns;
+            const subCellHeight = screenCellHeight / rows;
+
+            const secondColumn = secondIndex % columns;
+            const secondRow = Math.floor(secondIndex / columns);
+
+            const centerX =
+              firstCellX + (secondColumn + 0.5) * subCellWidth;
+
+            const centerY =
+              firstCellY + (secondRow + 0.5) * subCellHeight;
+
+            await getCurrentWindow().setCursorPosition(
+              new LogicalPosition(centerX, centerY)
+            );
+
+            firstKey = null;
+          }
         }
       }
     });
@@ -71,29 +98,29 @@ function App() {
   return (
     <main className="container">
       <div className="grid">
-          <div className="grid-item">Y</div>
-          <div className="grid-item">U</div>
-          <div className="grid-item">I</div>
-          <div className="grid-item">O</div>
-          <div className="grid-item">P</div>
+        <KeyGrid letter="Y" />
+        <KeyGrid letter="U" />
+        <KeyGrid letter="I" />
+        <KeyGrid letter="O" />
+        <KeyGrid letter="P" />
 
-          <div className="grid-item">H</div>
-          <div className="grid-item">J</div>
-          <div className="grid-item">K</div>
-          <div className="grid-item">L</div>
-          <div className="grid-item">:</div>
+        <KeyGrid letter="H" />
+        <KeyGrid letter="J" />
+        <KeyGrid letter="K" />
+        <KeyGrid letter="L" />
+        <KeyGrid letter=":" />
 
-          <div className="grid-item">N</div>
-          <div className="grid-item">M</div>
-          <div className="grid-item">,</div>
-          <div className="grid-item">.</div>
-          <div className="grid-item">/</div>
+        <KeyGrid letter="N" />
+        <KeyGrid letter="M" />
+        <KeyGrid letter="," />
+        <KeyGrid letter="." />
+        <KeyGrid letter="/" />
 
-          <div className="grid-item">Q</div>
-          <div className="grid-item">W</div>
-          <div className="grid-item">E</div>
-          <div className="grid-item">R</div>
-          <div className="grid-item">T</div>
+        <KeyGrid letter="Q" />
+        <KeyGrid letter="W" />
+        <KeyGrid letter="E" />
+        <KeyGrid letter="R" />
+        <KeyGrid letter="T" />
       </div>
     </main>
   );
