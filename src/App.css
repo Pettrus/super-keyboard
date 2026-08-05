@@ -1,58 +1,63 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
-  margin: 0
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
 }
 
 .container {
-  background-color: transparent;
-  color: white;
   width: 100%;
   height: 100%;
+  /* A slight wash keeps the labels readable over light windows. */
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-family: system-ui, sans-serif;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
   width: 100%;
   height: 100%;
 }
 
-/* .grid .grid-item {
-  background-color: red;
-}
-
-.grid .grid-item:nth-child(2n) {
-  background-color: green;
-} */
-
-.grid-item {
+.cell {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 7rem;
-  position: relative;
+  border: 1px solid rgba(192, 192, 192, 0.35);
+  font-size: 7vh;
+  text-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.9);
 }
 
-.sub-grid-item {
+/* Once a cell is picked the rest of the screen only has to stay recognisable. */
+.cell.dimmed {
+  opacity: 0.12;
+}
+
+.cell.selected {
+  border-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.sub-grid {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  font-size: 3rem;
-  opacity: 0.19;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
 }
 
-.sub-grid-item div {  
-  border: 1px solid #C0C0C0;
+.sub-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(192, 192, 192, 0.4);
+  font-size: 2vh;
 }
