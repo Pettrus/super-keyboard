@@ -32,8 +32,14 @@ npm install
 npm run tauri dev
 ```
 
-macOS asks for Accessibility permission the first time, since global shortcuts
-need it.
+Needs Node 20.19+ and a Rust toolchain (plus the Xcode command line tools on
+macOS).
+
+Neither half of this should need Accessibility permission: the shortcut goes
+through Carbon hotkeys and the pointer moves with a cursor warp rather than a
+synthesised event. If the shortcut silently never fires, the likely cause is
+another application holding `Cmd+Shift+A` — the registration error is logged to
+the webview console.
 
 ## Recommended IDE Setup
 
