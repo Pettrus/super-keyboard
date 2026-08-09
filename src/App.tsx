@@ -23,7 +23,7 @@ const ACTIVATION_SHORTCUT = "CommandOrControl+Shift+A";
  * "hold": the overlay is visible for as long as the shortcut is held down.
  * "toggle": the shortcut opens the overlay, and closes it if it is already open.
  */
-const ACTIVATION_MODE: "hold" | "toggle" = "hold";
+const ACTIVATION_MODE: "hold" | "toggle" = "toggle";
 
 /** The monitor the pointer currently sits on, which is the one to cover. */
 async function activeMonitor(): Promise<Monitor | null> {

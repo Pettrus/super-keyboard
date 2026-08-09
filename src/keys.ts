@@ -28,11 +28,11 @@ export const KEYS: Key[] = [
     { code: "Period", label: "." },
     { code: "Slash", label: "/" },
 
-    { code: "KeyQ", label: "Q" },
-    { code: "KeyW", label: "W" },
-    { code: "KeyE", label: "E" },
-    { code: "KeyR", label: "R" },
-    { code: "KeyT", label: "T" },
+    { code: "KeyZ", label: "Z" },
+    { code: "KeyX", label: "X" },
+    { code: "KeyC", label: "C" },
+    { code: "KeyV", label: "V" },
+    { code: "KeyB", label: "B" },
 ];
 
 if (KEYS.length !== COLUMNS * ROWS) {
